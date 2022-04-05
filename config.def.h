@@ -61,13 +61,41 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon,
+  "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan,
+  "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *lfcmd[]  = { "st", "-e", "lf", NULL };
+static const char *surfcmd[]  = { "surf", "-s", NULL };
+static const char *wsearchcmd[]  = { "/home/martoko/.local/bin/wsearch", NULL };
+static const char *voldowncmd[] = { "pactl", "set-sink-volume",
+                                    "@DEFAULT_SINK@", "-5%", NULL };
+static const char *volupcmd[] = { "pactl", "set-sink-volume",
+                                  "@DEFAULT_SINK@", "+5%", NULL };
+static const char *mutecmd[] = { "pactl", "set-sink-mute",
+                                 "@DEFAULT_SINK@", "toggle", NULL };
+static const char *brightdowncmd[] = { "sh", "-c", "echo "
+    "$(cat /sys/class/backlight/acpi_video0/brightness) - 1 | "
+    "bc > /sys/class/backlight/acpi_video0/brightness", NULL };
+static const char *brightupcmd[] = { "sh", "-c", "echo "
+    "$(cat /sys/class/backlight/acpi_video0/brightness) + 1 | "
+    "bc > /sys/class/backlight/acpi_video0/brightness", NULL };
 
 static Key keys[] = {
-	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+	/* modifier                     key                       function        argument */
+	{ MODKEY,                       XK_p,                     spawn,          {.v = dmenucmd } },
+	{ MODKEY|ShiftMask,             XK_Return,                spawn,          {.v = termcmd } },
+	{ MODKEY,                       XK_e,                     spawn,          {.v = lfcmd } },
+	{ MODKEY,                       XK_s,                     spawn,          {.v = surfcmd } },
+	{ MODKEY|ShiftMask,             XK_s,                     spawn,          {.v = wsearchcmd } },
+	{ 0,                            XF86XK_AudioLowerVolume,  spawn,          {.v = voldowncmd } },
+	{ 0,                            XF86XK_AudioRaiseVolume,  spawn,          {.v = volupcmd } },
+	{ 0,                            XF86XK_AudioMute,         spawn,          {.v = mutecmd } },
+	{ MODKEY,                       XK_F11,                   spawn,          {.v = voldowncmd } },
+	{ MODKEY,                       XK_F12,                   spawn,          {.v = volupcmd } },
+	{ MODKEY,                       XK_F10,                   spawn,          {.v = mutecmd } },
+	{ 0,                            XF86XK_MonBrightnessDown, spawn,          {.v = brightdowncmd } },
+	{ 0,                            XF86XK_MonBrightnessUp,   spawn,          {.v = brightupcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -77,7 +105,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	{ MODKEY,                       XK_w,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
